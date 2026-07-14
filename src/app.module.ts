@@ -13,4 +13,4 @@ import { MicroserviciosModule } from './microservicios/microservicios.module';
     AuthModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

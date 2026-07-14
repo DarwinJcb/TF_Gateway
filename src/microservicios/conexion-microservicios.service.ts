@@ -40,7 +40,7 @@ export class ConexionMicroserviciosService
     await this.clienteUsuarios.connect();
 
     this.logger.log(
-      `Gateway conectado por TCP al Microservicio de Usuarios en ${host}:${puerto}`,
+      `Gateway conectado por TCP al Microservicio de Usuarios en ${host}:${puerto}.`,
     );
   }
 

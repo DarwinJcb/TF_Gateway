@@ -20,7 +20,7 @@ import { LoginDto } from './login.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -30,9 +30,7 @@ export class AuthController {
 
   @Get('perfil')
   @UseGuards(JwtAuthGuard)
-  obtenerPerfil(
-    @Req() request: RequestConUsuario,
-  ): UsuarioAutenticado {
+  obtenerPerfil(@Req() request: RequestConUsuario): UsuarioAutenticado {
     return request.user;
   }
 }

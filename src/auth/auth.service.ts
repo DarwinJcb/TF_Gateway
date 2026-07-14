@@ -13,7 +13,7 @@ export class AuthService {
   constructor(
     @Inject(MICROSERVICIO_USUARIOS)
     private readonly clienteUsuarios: ClientProxy,
-  ) { }
+  ) {}
 
   async login(loginDto: LoginDto): Promise<RespuestaLogin> {
     try {

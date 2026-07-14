@@ -2,19 +2,19 @@
 import type { Request } from 'express';
 
 export interface JwtPayload {
-    sub: number;
-    correo: string;
+  sub: number;
+  correo: string;
 }
 
 export interface UsuarioAutenticado {
-    IdUsuario: number;
-    correo: string;
+  IdUsuario: number;
+  correo: string;
 }
 
 export interface RequestConUsuario extends Request {
-    user: UsuarioAutenticado;
+  user: UsuarioAutenticado;
 }
 
 export interface RespuestaLogin {
-    access_token: string;
+  access_token: string;
 }
