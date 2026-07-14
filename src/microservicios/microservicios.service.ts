@@ -1,21 +1,49 @@
-/* src/microservicios/microservicios.service.ts: */
-import { Injectable } from '@nestjs/common';
+/* src/microservicios/conexion-microservicios.service.ts */
+import {
+  Inject,
+  Injectable,
+  Logger,
+  OnApplicationBootstrap,
+  OnApplicationShutdown,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { ClientProxy } from '@nestjs/microservices';
+import {
+  obtenerPuertoRequerido,
+  obtenerTextoRequerido,
+} from '../configuracion/entorno';
+import { MICROSERVICIO_USUARIOS } from './microservicios.constants';
 
 @Injectable()
-export class MicroserviciosService {
+export class ConexionMicroserviciosService
+  implements OnApplicationBootstrap, OnApplicationShutdown {
+  private readonly logger = new Logger(ConexionMicroserviciosService.name);
 
+  constructor(
+    @Inject(MICROSERVICIO_USUARIOS)
+    private readonly clienteUsuarios: ClientProxy,
+    private readonly configService: ConfigService,
+  ) { }
 
-  findAll() {
-    return `This action returns all microservicios`;
+  async onApplicationBootstrap(): Promise<void> {
+    const host = obtenerTextoRequerido(
+      this.configService,
+      'HOST_MICROSERVICIO_USUARIOS',
+    );
+
+    const puerto = obtenerPuertoRequerido(
+      this.configService,
+      'PUERTO_MICROSERVICIO_USUARIOS',
+    );
+
+    await this.clienteUsuarios.connect();
+
+    this.logger.log(
+      `Gateway conectado por TCP al Microservicio de Usuarios en ${host}:${puerto}`,
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} microservicio`;
-  }
-
-
-
-  remove(id: number) {
-    return `This action removes a #${id} microservicio`;
+  async onApplicationShutdown(): Promise<void> {
+    await this.clienteUsuarios.close();
   }
 }
