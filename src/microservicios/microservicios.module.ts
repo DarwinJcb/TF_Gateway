@@ -1,11 +1,7 @@
 /* src/microservicios/microservicios.module.ts */
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import {
-  ClientOptions,
-  ClientsModule,
-  Transport,
-} from '@nestjs/microservices';
+import { ClientOptions, ClientsModule, Transport } from '@nestjs/microservices';
 import {
   obtenerPuertoRequerido,
   obtenerTextoRequerido,
@@ -21,9 +17,7 @@ import { MICROSERVICIO_USUARIOS } from './microservicios.constants';
         name: MICROSERVICIO_USUARIOS,
         imports: [ConfigModule],
         inject: [ConfigService],
-        useFactory: (
-          configService: ConfigService,
-        ): ClientOptions => ({
+        useFactory: (configService: ConfigService): ClientOptions => ({
           transport: Transport.TCP,
           options: {
             host: obtenerTextoRequerido(
@@ -42,4 +36,4 @@ import { MICROSERVICIO_USUARIOS } from './microservicios.constants';
   providers: [ConexionMicroserviciosService],
   exports: [ClientsModule],
 })
-export class MicroserviciosModule { }
+export class MicroserviciosModule {}

@@ -25,34 +25,21 @@ async function bootstrap(): Promise<void> {
 
   const configService = aplicacion.get(ConfigService);
 
-  const host = obtenerTextoRequerido(
-    configService,
-    'HOST_GATEWAY',
-  );
+  const host = obtenerTextoRequerido(configService, 'HOST_GATEWAY');
 
-  const puerto = obtenerPuertoRequerido(
-    configService,
-    'PUERTO_GATEWAY',
-  );
+  const puerto = obtenerPuertoRequerido(configService, 'PUERTO_GATEWAY');
 
   await aplicacion.listen(puerto, host);
 
-  logger.log(
-    `Gateway iniciado y escuchando por HTTP en ${host}:${puerto}`,
-  );
+  logger.log(`Gateway iniciado y escuchando por HTTP en ${host}:${puerto}`);
 }
 
 bootstrap().catch((error: unknown) => {
-  const mensajeError =
-    error instanceof Error ? error.message : String(error);
+  const mensajeError = error instanceof Error ? error.message : String(error);
 
-  const trazaError =
-    error instanceof Error ? error.stack : undefined;
+  const trazaError = error instanceof Error ? error.stack : undefined;
 
-  logger.error(
-    `No se pudo iniciar el Gateway: ${mensajeError}`,
-    trazaError,
-  );
+  logger.error(`No se pudo iniciar el Gateway: ${mensajeError}`, trazaError);
 
   process.exit(1);
 });
