@@ -4,8 +4,28 @@ POST http://127.0.0.1:3000/auth/login = POST http://localhost:3000/auth/login:
   "contrasena": "clave123"
 }
 
-GET http://127.0.0.1:3000/auth/perfil (Bearer Token) GET http://localhost:3000/auth/perfil (Bearer Token):
+GET http://127.0.0.1:3000/auth/perfil (Bearer Token) = GET http://localhost:3000/auth/perfil (Bearer Token):
 {
     "IdUsuario": 3,
     "correo": "carlos.jwt@example.com"
 }
+
+
+POST http://localhost:3000/usuarios
+{
+  "nombre": "Usuario Prueba Gateway",
+  "edad": 25,
+  "biografia": "Usuario creado para probar la comunicación HTTP y TCP.",
+  "peso": 70.5,
+  "altura": 1.75,
+  "nacionalidad": "Ecuatoriana",
+  "genero": "MASCULINO",
+  "ciudad": "Cuenca",
+  "pais": "Ecuador",
+  "numeroTelefono": "0990002026",
+  "correo": "prueba.gateway.2026@example.com",
+  "contrasena": "clave123"
+}
+
+GET http://localhost:3000/usuarios/ (Bearer Token)
+
