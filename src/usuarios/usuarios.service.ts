@@ -33,7 +33,7 @@ export class UsuariosService {
   findAll(): Promise<unknown[]> {
     return this.enviarSolicitud(
       USUARIOS_PATTERNS.LISTAR,
-      null,
+      {},
     );
   }
 
