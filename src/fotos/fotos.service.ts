@@ -25,14 +25,20 @@ export class FotosService {
   constructor(
     @Inject(MICROSERVICIO_USUARIOS)
     private readonly clienteUsuarios: ClientProxy,
-  ) {}
+  ) { }
 
   create(createFotoDto: CreateFotoDto): Promise<unknown> {
-    return this.enviarSolicitud(FOTOS_PATTERNS.CREAR, createFotoDto);
+    return this.enviarSolicitud(
+      FOTOS_PATTERNS.CREAR,
+      createFotoDto,
+    );
   }
 
   findAll(): Promise<unknown[]> {
-    return this.enviarSolicitud(FOTOS_PATTERNS.LISTAR, null);
+    return this.enviarSolicitud(
+      FOTOS_PATTERNS.LISTAR,
+      {},
+    );
   }
 
   findByUsuario(IdUsuario: number): Promise<unknown[]> {
@@ -40,7 +46,10 @@ export class FotosService {
       IdUsuario,
     };
 
-    return this.enviarSolicitud(FOTOS_PATTERNS.LISTAR_POR_USUARIO, payload);
+    return this.enviarSolicitud(
+      FOTOS_PATTERNS.LISTAR_POR_USUARIO,
+      payload,
+    );
   }
 
   findOne(IdFoto: number): Promise<unknown> {
@@ -48,16 +57,25 @@ export class FotosService {
       IdFoto,
     };
 
-    return this.enviarSolicitud(FOTOS_PATTERNS.BUSCAR_POR_ID, payload);
+    return this.enviarSolicitud(
+      FOTOS_PATTERNS.BUSCAR_POR_ID,
+      payload,
+    );
   }
 
-  update(IdFoto: number, updateFotoDto: UpdateFotoDto): Promise<unknown> {
+  update(
+    IdFoto: number,
+    updateFotoDto: UpdateFotoDto,
+  ): Promise<unknown> {
     const payload: ActualizarFotoPayload = {
       IdFoto,
       datosFoto: updateFotoDto,
     };
 
-    return this.enviarSolicitud(FOTOS_PATTERNS.ACTUALIZAR, payload);
+    return this.enviarSolicitud(
+      FOTOS_PATTERNS.ACTUALIZAR,
+      payload,
+    );
   }
 
   remove(IdFoto: number): Promise<unknown> {
@@ -65,7 +83,10 @@ export class FotosService {
       IdFoto,
     };
 
-    return this.enviarSolicitud(FOTOS_PATTERNS.ELIMINAR, payload);
+    return this.enviarSolicitud(
+      FOTOS_PATTERNS.ELIMINAR,
+      payload,
+    );
   }
 
   private async enviarSolicitud<Respuesta, Solicitud>(
@@ -74,7 +95,10 @@ export class FotosService {
   ): Promise<Respuesta> {
     try {
       return await firstValueFrom(
-        this.clienteUsuarios.send<Respuesta, Solicitud>(patron, solicitud),
+        this.clienteUsuarios.send<Respuesta, Solicitud>(
+          patron,
+          solicitud,
+        ),
       );
     } catch (error: unknown) {
       throw traducirErrorRpcAHttp(error);
