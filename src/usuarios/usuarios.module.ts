@@ -1,4 +1,4 @@
-/* src/usuarios/usuarios.module.ts */
+/* tf-gateway/src/usuarios/usuarios.module.ts */
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { UsuariosController } from './usuarios.controller';

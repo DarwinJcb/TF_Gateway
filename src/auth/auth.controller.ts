@@ -1,4 +1,4 @@
-/* src/auth/auth.controller.ts */
+/* tf-gateway/src/auth/auth.controller.ts */
 import {
   Body,
   Controller,

@@ -1,4 +1,4 @@
-/* src/microservicios/traducir-error-rpc.ts */
+/* tf-gateway/src/microservicios/traducir-error-rpc.ts */
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 type MensajeError = string | string[];

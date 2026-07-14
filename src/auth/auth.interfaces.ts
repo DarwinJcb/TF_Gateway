@@ -1,4 +1,4 @@
-/* src/auth/auth.interfaces.ts */
+/* tf-gateway/src/auth/auth.interfaces.ts */
 import type { Request } from 'express';
 
 export interface JwtPayload {

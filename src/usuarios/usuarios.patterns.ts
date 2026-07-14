@@ -1,4 +1,4 @@
-/* src/usuarios/usuarios.patterns.ts */
+/* tf-gateway/src/usuarios/usuarios.patterns.ts */
 export const USUARIOS_PATTERNS = {
     CREAR: 'usuarios.crear',
     LISTAR: 'usuarios.listar',

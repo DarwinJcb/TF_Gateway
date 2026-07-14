@@ -1,4 +1,4 @@
-/* src/usuarios/usuarios.service.ts */
+/* tf-gateway/src/usuarios/usuarios.service.ts */
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';

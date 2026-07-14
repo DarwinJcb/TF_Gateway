@@ -1,4 +1,4 @@
-/* src/configuracion/entorno.ts */
+/* tf-gateway/src/configuracion/entorno.ts */
 import { ConfigService } from '@nestjs/config';
 
 export function obtenerTextoRequerido(

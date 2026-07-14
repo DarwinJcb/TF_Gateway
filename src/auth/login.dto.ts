@@ -1,4 +1,4 @@
-/* src/auth/login.dto.ts: */
+/* tf-gateway/src/auth/login.dto.ts */
 import {
   IsEmail,
   IsNotEmpty,

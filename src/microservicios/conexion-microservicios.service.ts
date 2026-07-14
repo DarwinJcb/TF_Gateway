@@ -1,4 +1,4 @@
-/* src/microservicios/conexion-microservicios.service.ts */
+/* tf-gateway/src/microservicios/conexion-microservicios.service.ts */
 import {
   Inject,
   Injectable,

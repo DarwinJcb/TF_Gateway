@@ -1,4 +1,4 @@
-/* src/microservicios/microservicios.module.ts */
+/* tf-gateway/src/microservicios/microservicios.module.ts */
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientOptions, ClientsModule, Transport } from '@nestjs/microservices';
