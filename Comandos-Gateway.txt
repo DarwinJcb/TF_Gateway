@@ -28,4 +28,133 @@ POST http://localhost:3000/usuarios
 }
 
 GET http://localhost:3000/usuarios/ (Bearer Token)
+[
+    {
+        "IdUsuario": 1,
+        "nombre": "Darwin",
+        "edad": 22,
+        "biografia": "Estudiante de desarrollo de software",
+        "peso": 70.5,
+        "altura": 1.72,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Cuenca",
+        "pais": "Ecuador",
+        "numeroTelefono": "0991000001",
+        "correo": "darwin.mf@example.com",
+        "estadoActividad": "DESCONECTADO",
+        "interes": {
+            "IdInteres": 1,
+            "signoZodiacal": "ARIES",
+            "queBusca": "Una relación estable",
+            "ubicacion": "Centro",
+            "ciudad": "Cuenca",
+            "pais": "Ecuador",
+            "hobby": "Programación y música",
+            "dedicacion": "Estudiante",
+            "UsuarioFK": 1
+        },
+        "fotos": [
+            {
+                "IdFoto": 1,
+                "urlFoto": "https://ejemplo.com/foto-perfil-1.jpg",
+                "UsuarioFK": 1
+            }
+        ],
+        "ubicaciones": [
+            {
+                "IdUbicacion": 1,
+                "ubicacion": "Centro Histórico",
+                "ciudad": "Quito",
+                "pais": "Ecuador",
+                "UsuarioFK": 1
+            }
+        ],
+        "musicas": [
+            {
+                "IdMusica": 1,
+                "nombreCancion": "Blinding Lights",
+                "tipoMusica": "Pop",
+                "UsuarioFK": 1
+            }
+        ]
+    },
+    {
+        "IdUsuario": 2,
+        "nombre": "Ana",
+        "edad": 21,
+        "biografia": "Estudiante universitaria",
+        "peso": 58.2,
+        "altura": 1.65,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "FEMENINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0991000002",
+        "correo": "ana.mf@example.com",
+        "estadoActividad": "DESCONECTADO",
+        "interes": null,
+        "fotos": [],
+        "ubicaciones": [],
+        "musicas": []
+    },
+    {
+        "IdUsuario": 3,
+        "nombre": "Carlos",
+        "edad": 24,
+        "biografia": "Me gusta la tecnología y viajar.",
+        "peso": 72.5,
+        "altura": 1.76,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Quito",
+        "pais": "Ecuador",
+        "numeroTelefono": "0998765432",
+        "correo": "carlos.jwt@example.com",
+        "estadoActividad": "DESCONECTADO",
+        "interes": null,
+        "fotos": [],
+        "ubicaciones": [],
+        "musicas": []
+    },
+    {
+        "IdUsuario": 4,
+        "nombre": "Usuario Prueba Gateway",
+        "edad": 25,
+        "biografia": "Usuario creado para probar la comunicación HTTP y TCP.",
+        "peso": 70.5,
+        "altura": 1.75,
+        "nacionalidad": "Ecuatoriana",
+        "genero": "MASCULINO",
+        "ciudad": "Cuenca",
+        "pais": "Ecuador",
+        "numeroTelefono": "0990002026",
+        "correo": "prueba.gateway.2026@example.com",
+        "estadoActividad": "DESCONECTADO",
+        "interes": null,
+        "fotos": [],
+        "ubicaciones": [],
+        "musicas": []
+    }
+]
+
+PATCH http://localhost:3000/usuarios/4
+{
+  "ciudad": "Quito",
+  "biografia": "Perfil actualizado desde el Gateway."
+}
+
+DELETE  http://localhost:3000/usuarios/4
+
+
+POST http://localhost:3000/fotos
+{
+  "urlFoto": "https://example.com/fotos/carlos-prueba.jpg",
+  "UsuarioFK": 3
+}
+
+
+GET http://localhost:3000/fotos
+
+
 

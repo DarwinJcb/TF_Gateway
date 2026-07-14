@@ -21,20 +21,14 @@ export class UsuariosService {
   constructor(
     @Inject(MICROSERVICIO_USUARIOS)
     private readonly clienteUsuarios: ClientProxy,
-  ) { }
+  ) {}
 
   create(createUsuarioDto: CreateUsuarioDto): Promise<unknown> {
-    return this.enviarSolicitud(
-      USUARIOS_PATTERNS.CREAR,
-      createUsuarioDto,
-    );
+    return this.enviarSolicitud(USUARIOS_PATTERNS.CREAR, createUsuarioDto);
   }
 
   findAll(): Promise<unknown[]> {
-    return this.enviarSolicitud(
-      USUARIOS_PATTERNS.LISTAR,
-      {},
-    );
+    return this.enviarSolicitud(USUARIOS_PATTERNS.LISTAR, {});
   }
 
   findOne(IdUsuario: number): Promise<unknown> {
@@ -42,10 +36,7 @@ export class UsuariosService {
       IdUsuario,
     };
 
-    return this.enviarSolicitud(
-      USUARIOS_PATTERNS.BUSCAR_POR_ID,
-      payload,
-    );
+    return this.enviarSolicitud(USUARIOS_PATTERNS.BUSCAR_POR_ID, payload);
   }
 
   update(
@@ -57,10 +48,7 @@ export class UsuariosService {
       datosUsuario: updateUsuarioDto,
     };
 
-    return this.enviarSolicitud(
-      USUARIOS_PATTERNS.ACTUALIZAR,
-      payload,
-    );
+    return this.enviarSolicitud(USUARIOS_PATTERNS.ACTUALIZAR, payload);
   }
 
   remove(IdUsuario: number): Promise<unknown> {
@@ -68,10 +56,7 @@ export class UsuariosService {
       IdUsuario,
     };
 
-    return this.enviarSolicitud(
-      USUARIOS_PATTERNS.ELIMINAR,
-      payload,
-    );
+    return this.enviarSolicitud(USUARIOS_PATTERNS.ELIMINAR, payload);
   }
 
   private async enviarSolicitud<Respuesta, Solicitud>(
@@ -80,10 +65,7 @@ export class UsuariosService {
   ): Promise<Respuesta> {
     try {
       return await firstValueFrom(
-        this.clienteUsuarios.send<Respuesta, Solicitud>(
-          patron,
-          solicitud,
-        ),
+        this.clienteUsuarios.send<Respuesta, Solicitud>(patron, solicitud),
       );
     } catch (error: unknown) {
       throw traducirErrorRpcAHttp(error);

@@ -5,9 +5,9 @@ import { EstadoActividad } from '../usuarios.enums';
 import { CreateUsuarioDto } from './create-usuario.dto';
 
 export class UpdateUsuarioDto extends PartialType(
-    OmitType(CreateUsuarioDto, ['contrasena'] as const),
+  OmitType(CreateUsuarioDto, ['contrasena'] as const),
 ) {
-    @IsOptional()
-    @IsEnum(EstadoActividad)
-    estadoActividad?: EstadoActividad;
+  @IsOptional()
+  @IsEnum(EstadoActividad)
+  estadoActividad?: EstadoActividad;
 }

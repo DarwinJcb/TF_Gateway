@@ -17,12 +17,10 @@ import { UsuariosService } from './usuarios.service';
 
 @Controller('usuarios')
 export class UsuariosController {
-  constructor(private readonly usuariosService: UsuariosService) { }
+  constructor(private readonly usuariosService: UsuariosService) {}
 
   @Post()
-  create(
-    @Body() createUsuarioDto: CreateUsuarioDto,
-  ): Promise<unknown> {
+  create(@Body() createUsuarioDto: CreateUsuarioDto): Promise<unknown> {
     return this.usuariosService.create(createUsuarioDto);
   }
 
@@ -33,9 +31,7 @@ export class UsuariosController {
   }
 
   @Get(':id')
-  findOne(
-    @Param('id', ParseIntPipe) IdUsuario: number,
-  ): Promise<unknown> {
+  findOne(@Param('id', ParseIntPipe) IdUsuario: number): Promise<unknown> {
     return this.usuariosService.findOne(IdUsuario);
   }
 
@@ -44,16 +40,11 @@ export class UsuariosController {
     @Param('id', ParseIntPipe) IdUsuario: number,
     @Body() updateUsuarioDto: UpdateUsuarioDto,
   ): Promise<unknown> {
-    return this.usuariosService.update(
-      IdUsuario,
-      updateUsuarioDto,
-    );
+    return this.usuariosService.update(IdUsuario, updateUsuarioDto);
   }
 
   @Delete(':id')
-  remove(
-    @Param('id', ParseIntPipe) IdUsuario: number,
-  ): Promise<unknown> {
+  remove(@Param('id', ParseIntPipe) IdUsuario: number): Promise<unknown> {
     return this.usuariosService.remove(IdUsuario);
   }
 }
