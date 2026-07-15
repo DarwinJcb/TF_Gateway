@@ -19,5 +19,5 @@ export class CreateDonacionDto {
   @IsOptional()
   @IsInt()
   @Min(1)
-  TransmisionFK?: number;
+  TransmisionFK?: number | null;
 }
