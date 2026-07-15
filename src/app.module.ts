@@ -6,6 +6,7 @@ import { FotosModule } from './fotos/fotos.module';
 import { InteresesModule } from './intereses/intereses.module';
 import { MicroserviciosModule } from './microservicios/microservicios.module';
 import { MusicasModule } from './musicas/musicas.module';
+import { TransmisionesModule } from './transmisiones/transmisiones.module';
 import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 
@@ -21,6 +22,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     InteresesModule,
     UbicacionesModule,
     MusicasModule,
+    TransmisionesModule,
   ],
 })
 export class AppModule {}
