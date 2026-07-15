@@ -1,279 +1,115 @@
 /* tf-gateway/src/donaciones/donaciones.service.ts */
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
-import { EstadoTransmision } from '../generated/prisma/enums';
-import { PrismaService } from '../prisma/prisma.service';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
+import { MICROSERVICIO_USUARIOS } from '../microservicios/microservicios.constants';
+import { traducirErrorRpcAHttp } from '../microservicios/traducir-error-rpc';
 import { CreateDonacionDto } from './dto/create-donacion.dto';
 import { UpdateDonacionDto } from './dto/update-donacion.dto';
+import { DONACIONES_PATTERNS } from './donaciones.patterns';
+
+interface IdDonacionPayload {
+  IdDonacion: number;
+}
+
+interface IdUsuarioDonacionesPayload {
+  IdUsuario: number;
+}
+
+interface IdTransmisionDonacionesPayload {
+  IdTransmision: number;
+}
+
+interface ActualizarDonacionPayload extends IdDonacionPayload {
+  datosDonacion: UpdateDonacionDto;
+}
 
 @Injectable()
 export class DonacionesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject(MICROSERVICIO_USUARIOS)
+    private readonly clienteUsuarios: ClientProxy,
+  ) {}
 
-  async create(createDonacionDto: CreateDonacionDto) {
-    const { UsuarioDonanteFK, UsuarioReceptorFK, TransmisionFK } =
-      createDonacionDto;
+  create(createDonacionDto: CreateDonacionDto): Promise<unknown> {
+    return this.enviarSolicitud(DONACIONES_PATTERNS.CREAR, createDonacionDto);
+  }
 
-    this.verificarUsuariosDiferentes(UsuarioDonanteFK, UsuarioReceptorFK);
+  findAll(): Promise<unknown[]> {
+    return this.enviarSolicitud(DONACIONES_PATTERNS.LISTAR, {});
+  }
 
-    await Promise.all([
-      this.verificarUsuario(UsuarioDonanteFK),
-      this.verificarUsuario(UsuarioReceptorFK),
-    ]);
+  findByDonante(IdUsuario: number): Promise<unknown[]> {
+    const payload: IdUsuarioDonacionesPayload = {
+      IdUsuario,
+    };
 
-    if (TransmisionFK !== undefined) {
-      await this.verificarTransmisionParaDonacion(
-        TransmisionFK,
-        UsuarioReceptorFK,
+    return this.enviarSolicitud(
+      DONACIONES_PATTERNS.LISTAR_POR_DONANTE,
+      payload,
+    );
+  }
+
+  findByReceptor(IdUsuario: number): Promise<unknown[]> {
+    const payload: IdUsuarioDonacionesPayload = {
+      IdUsuario,
+    };
+
+    return this.enviarSolicitud(
+      DONACIONES_PATTERNS.LISTAR_POR_RECEPTOR,
+      payload,
+    );
+  }
+
+  findByTransmision(IdTransmision: number): Promise<unknown[]> {
+    const payload: IdTransmisionDonacionesPayload = {
+      IdTransmision,
+    };
+
+    return this.enviarSolicitud(
+      DONACIONES_PATTERNS.LISTAR_POR_TRANSMISION,
+      payload,
+    );
+  }
+
+  findOne(IdDonacion: number): Promise<unknown> {
+    const payload: IdDonacionPayload = {
+      IdDonacion,
+    };
+
+    return this.enviarSolicitud(DONACIONES_PATTERNS.BUSCAR_POR_ID, payload);
+  }
+
+  update(
+    IdDonacion: number,
+    updateDonacionDto: UpdateDonacionDto,
+  ): Promise<unknown> {
+    const payload: ActualizarDonacionPayload = {
+      IdDonacion,
+      datosDonacion: updateDonacionDto,
+    };
+
+    return this.enviarSolicitud(DONACIONES_PATTERNS.ACTUALIZAR, payload);
+  }
+
+  remove(IdDonacion: number): Promise<unknown> {
+    const payload: IdDonacionPayload = {
+      IdDonacion,
+    };
+
+    return this.enviarSolicitud(DONACIONES_PATTERNS.ELIMINAR, payload);
+  }
+
+  private async enviarSolicitud<Respuesta, Solicitud>(
+    patron: string,
+    solicitud: Solicitud,
+  ): Promise<Respuesta> {
+    try {
+      return await firstValueFrom(
+        this.clienteUsuarios.send<Respuesta, Solicitud>(patron, solicitud),
       );
-    }
-
-    return this.prisma.donacion.create({
-      data: createDonacionDto,
-      include: {
-        usuarioDonante: true,
-        usuarioReceptor: true,
-        transmision: true,
-      },
-    });
-  }
-
-  findAll() {
-    return this.prisma.donacion.findMany({
-      include: {
-        usuarioDonante: true,
-        usuarioReceptor: true,
-        transmision: true,
-      },
-      orderBy: {
-        fechaDonacion: 'desc',
-      },
-    });
-  }
-
-  async findByDonante(idUsuario: number) {
-    await this.verificarUsuario(idUsuario);
-
-    return this.prisma.donacion.findMany({
-      where: {
-        UsuarioDonanteFK: idUsuario,
-      },
-      include: {
-        usuarioDonante: true,
-        usuarioReceptor: true,
-        transmision: true,
-      },
-      orderBy: {
-        fechaDonacion: 'desc',
-      },
-    });
-  }
-
-  async findByReceptor(idUsuario: number) {
-    await this.verificarUsuario(idUsuario);
-
-    return this.prisma.donacion.findMany({
-      where: {
-        UsuarioReceptorFK: idUsuario,
-      },
-      include: {
-        usuarioDonante: true,
-        usuarioReceptor: true,
-        transmision: true,
-      },
-      orderBy: {
-        fechaDonacion: 'desc',
-      },
-    });
-  }
-
-  async findByTransmision(idTransmision: number) {
-    await this.verificarTransmision(idTransmision);
-
-    return this.prisma.donacion.findMany({
-      where: {
-        TransmisionFK: idTransmision,
-      },
-      include: {
-        usuarioDonante: true,
-        usuarioReceptor: true,
-        transmision: true,
-      },
-      orderBy: {
-        fechaDonacion: 'desc',
-      },
-    });
-  }
-
-  async findOne(id: number) {
-    const donacion = await this.prisma.donacion.findUnique({
-      where: {
-        IdDonacion: id,
-      },
-      include: {
-        usuarioDonante: true,
-        usuarioReceptor: true,
-        transmision: true,
-      },
-    });
-
-    if (!donacion) {
-      throw new RpcException({
-        statusCode: HttpStatus.NOT_FOUND,
-        message: `No existe una donación con el ID ${id}.`,
-        error: 'Not Found',
-      });
-    }
-
-    return donacion;
-  }
-
-  async update(id: number, updateDonacionDto: UpdateDonacionDto) {
-    const donacionActual = await this.findOne(id);
-
-    const idUsuarioDonante =
-      updateDonacionDto.UsuarioDonanteFK ?? donacionActual.UsuarioDonanteFK;
-
-    const idUsuarioReceptor =
-      updateDonacionDto.UsuarioReceptorFK ?? donacionActual.UsuarioReceptorFK;
-
-    const idTransmision =
-      updateDonacionDto.TransmisionFK !== undefined
-        ? updateDonacionDto.TransmisionFK
-        : donacionActual.TransmisionFK;
-
-    const cambiaReceptor =
-      updateDonacionDto.UsuarioReceptorFK !== undefined &&
-      updateDonacionDto.UsuarioReceptorFK !== donacionActual.UsuarioReceptorFK;
-
-    const cambiaTransmision =
-      updateDonacionDto.TransmisionFK !== undefined &&
-      updateDonacionDto.TransmisionFK !== donacionActual.TransmisionFK;
-
-    this.verificarUsuariosDiferentes(idUsuarioDonante, idUsuarioReceptor);
-
-    await Promise.all([
-      this.verificarUsuario(idUsuarioDonante),
-      this.verificarUsuario(idUsuarioReceptor),
-    ]);
-
-    if ((cambiaReceptor || cambiaTransmision) && idTransmision !== null) {
-      await this.verificarTransmisionParaDonacion(
-        idTransmision,
-        idUsuarioReceptor,
-      );
-    }
-
-    return this.prisma.donacion.update({
-      where: {
-        IdDonacion: id,
-      },
-      data: updateDonacionDto,
-      include: {
-        usuarioDonante: true,
-        usuarioReceptor: true,
-        transmision: true,
-      },
-    });
-  }
-
-  async remove(id: number) {
-    await this.findOne(id);
-
-    return this.prisma.donacion.delete({
-      where: {
-        IdDonacion: id,
-      },
-    });
-  }
-
-  private async verificarUsuario(idUsuario: number): Promise<void> {
-    const usuario = await this.prisma.usuario.findUnique({
-      where: {
-        IdUsuario: idUsuario,
-      },
-      select: {
-        IdUsuario: true,
-      },
-    });
-
-    if (!usuario) {
-      throw new RpcException({
-        statusCode: HttpStatus.NOT_FOUND,
-        message: `No existe un usuario con el ID ${idUsuario}.`,
-        error: 'Not Found',
-      });
-    }
-  }
-
-  private async verificarTransmision(idTransmision: number): Promise<void> {
-    const transmision = await this.prisma.transmision.findUnique({
-      where: {
-        IdTransmision: idTransmision,
-      },
-      select: {
-        IdTransmision: true,
-      },
-    });
-
-    if (!transmision) {
-      throw new RpcException({
-        statusCode: HttpStatus.NOT_FOUND,
-        message: `No existe una transmisión con el ID ${idTransmision}.`,
-        error: 'Not Found',
-      });
-    }
-  }
-
-  private async verificarTransmisionParaDonacion(
-    idTransmision: number,
-    idUsuarioReceptor: number,
-  ): Promise<void> {
-    const transmision = await this.prisma.transmision.findUnique({
-      where: {
-        IdTransmision: idTransmision,
-      },
-      select: {
-        estado: true,
-        UsuarioFK: true,
-      },
-    });
-
-    if (!transmision) {
-      throw new RpcException({
-        statusCode: HttpStatus.NOT_FOUND,
-        message: `No existe una transmisión con el ID ${idTransmision}.`,
-        error: 'Not Found',
-      });
-    }
-
-    if (transmision.estado !== EstadoTransmision.LIVE) {
-      throw new RpcException({
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Solo se pueden registrar donaciones en transmisiones LIVE.',
-        error: 'Bad Request',
-      });
-    }
-
-    if (transmision.UsuarioFK !== idUsuarioReceptor) {
-      throw new RpcException({
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'El usuario receptor no es el propietario de la transmisión.',
-        error: 'Bad Request',
-      });
-    }
-  }
-
-  private verificarUsuariosDiferentes(
-    idUsuarioDonante: number,
-    idUsuarioReceptor: number,
-  ): void {
-    if (idUsuarioDonante === idUsuarioReceptor) {
-      throw new RpcException({
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Un usuario no puede realizarse una donación a sí mismo.',
-        error: 'Bad Request',
-      });
+    } catch (error: unknown) {
+      throw traducirErrorRpcAHttp(error);
     }
   }
 }
