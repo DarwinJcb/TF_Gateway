@@ -5,6 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { FotosModule } from './fotos/fotos.module';
 import { InteresesModule } from './intereses/intereses.module';
 import { MicroserviciosModule } from './microservicios/microservicios.module';
+import { MusicasModule } from './musicas/musicas.module';
+import { UbicacionesModule } from './ubicaciones/ubicaciones.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
@@ -17,6 +19,8 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     UsuariosModule,
     FotosModule,
     InteresesModule,
+    UbicacionesModule,
+    MusicasModule,
   ],
 })
 export class AppModule {}
