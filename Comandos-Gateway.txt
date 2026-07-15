@@ -153,8 +153,25 @@ POST http://localhost:3000/fotos
   "UsuarioFK": 3
 }
 
+GET http://localhost:3000/fotos/
+[
+    {
+        "IdFoto": 1,
+        "urlFoto": "https://ejemplo.com/foto-perfil-1.jpg",
+        "UsuarioFK": 1
+    },
+    {
+        "IdFoto": 2,
+        "urlFoto": "https://example.com/fotos/carlos-prueba.jpg",
+        "UsuarioFK": 3
+    }
+]
 
-GET http://localhost:3000/fotos
+
+GET http://localhost:3000/fotos/usuario/3
 
 
+
+
+GET http://localhost:3000/fotos/2
 
